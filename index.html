@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Profile Fetch</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="profile-container">
+      <div id="image-container">
+        <img id="profile-picture" src="" alt="Profile Picture" />
+        <h2 id="username"></h2>
+      </div>
+      <div id="stats-container">
+        <p id="followers">Followers: <span id="followers-count"></span></p>
+        <p id="following">Following: <span id="following-count"></span></p>
+      </div>
+      <button id="fetch-profile-button">Fetch My Profile</button>
+    </div>
+    <script>
+      function fetchGitHubProfile() {
+        const apiUrl = "https://api.github.com/users/ryanboodhoo";
+
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.json();
+          })
+          .then((data) => {
+             const username = data.login;
+            const avatarUrl = data.avatar_url;
+            const followers = data.followers;
+            const following = data.following;
+
+             document.getElementById("username").textContent = username;
+            const profilePicture = document.getElementById("profile-picture");
+            profilePicture.src = avatarUrl;
+            profilePicture.alt = `${username}'s profile picture`;
+            document.getElementById("followers-count").textContent = followers;
+            document.getElementById("following-count").textContent = following;
+          })
+          .catch((error) => console.error("Error fetching GitHub profile:", error));
+      }
+
+      document
+        .getElementById("fetch-profile-button")
+        .addEventListener("click", fetchGitHubProfile);
+    </script>
+  </body>
+</html>
